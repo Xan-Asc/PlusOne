@@ -121,24 +121,27 @@ function Plus:InitLoot()
 
 	-- check bags for any unbound items
 	Plus.itemList = {}
+	local sortedItems = {}
 	for bagID=0, 4 do
 		for slot=1, GetContainerNumSlots(bagID) do
 			local _, itemCount, _, _, _, _, itemLink = GetContainerItemInfo(bagID, slot)			
 			if itemLink then
-				local _, _, iqual = GetItemInfo(itemLink)
+				local name, _, iqual = GetItemInfo(itemLink)
 				if iqual >= Plus.One.db.profile.minquality then
 					if isTradable(bagID, slot) then
-						if Plus.itemList[itemLink] then
-							Plus.itemList[itemLink] = Plus.itemList[itemLink] + itemCount
+						if Plus.itemList[name] then
+							Plus.itemList[name]["count"] = Plus.itemList[name]["count"] + itemCount
 						else
-							Plus.itemList[itemLink] = itemCount
+							sortedItems[#sortedItems + 1] = name
+							Plus.itemList[name] = {["itemlink"] = itemLink ,["count"] = itemCount}
 						end
 					end
 				end
 			end
 		end
 	end
-	for k, v in pairs(Plus.itemList) do
-		Plus:AddItem(k, v)
+	table.sort(sortedItems)
+	for _, n in ipairs(sortedItems) do
+		Plus:AddItem(Plus.itemList[n]["itemlink"], Plus.itemList[n]["count"])
 	end
 end
