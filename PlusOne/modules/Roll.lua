@@ -1,13 +1,13 @@
 local _, Plus = ...
 
 function Plus.One:LootRollTimer(remain)
-	SendChatMessage(remain.." seconds remaining!", Plus.isRaid and "RAID_WARNING" or "PARTY")
+	SendChatMessage(remain.." seconds remaining!", "RAID_WARNING")
 end
 
 function Plus.One:EndRollTimer(remain)
 	Plus.One:UnregisterEvent("CHAT_MSG_SYSTEM")
 	Plus.rolling = false
-	SendChatMessage("Rolls have finished, no further rolls will be tracked.", Plus.isRaid and "RAID_WARNING" or "PARTY")
+	SendChatMessage("Rolls have finished, no further rolls will be tracked.", "RAID_WARNING")
 end
 
 function Plus.One:CHAT_MSG_SYSTEM(...)
@@ -20,26 +20,27 @@ function Plus.One:CHAT_MSG_SYSTEM(...)
 		if minr ~= 1 or Plus.rolled[name] ~= nil then return end
 		Plus.rolled[name] = true
 		if maxr == Plus.One.db.profile.rollSR and Plus.One.db.profile.trackSR then
-			Plus:AddRoll(name, val, Plus.rollcontainer:GetUserData("sr"))
+			Plus:AddRoll(name, val, Plus.rollcontainer:GetUserData("sr"), Plus.SRSortPO)
 		elseif maxr == Plus.One.db.profile.rollMS then
-			Plus:AddRoll(name, val, Plus.rollcontainer:GetUserData("ms"))
+			Plus:AddRoll(name, val, Plus.rollcontainer:GetUserData("ms"), Plus.MSSortPO)
 		elseif maxr == Plus.One.db.profile.rollOS and Plus.One.db.profile.trackOS then
-			Plus:AddRoll(name, val, Plus.rollcontainer:GetUserData("os"))
+			Plus:AddRoll(name, val, Plus.rollcontainer:GetUserData("os"), Plus.OSSortPO)
 		else
 			Plus.rolled[name] = nil
 		end
 	end
 end
 
-local timer_rolls = {1, 2, 3, 4, 5, 10, 15, 20, 30}
+local timer_rolls = {1, 2, 3, 5, 10, 15, 20, 30}
 
-function Plus:AddRoll(name, value, widget)
+function Plus:AddRoll(name, value, widget, sort)
 	local roll = Plus.AceGUI:Create("SimpleGroup")
 	roll:SetLayout("Flow")
 	roll:SetRelativeWidth(1)
 	local pt = Plus.AceGUI:Create("Button")
 	local pval = Plus.AceGUI:Create("Label")
 	local pto = Plus.AceGUI:Create("Label")
+	local pp = Plus.AceGUI:Create("Button")
 
 	-- Add text
 	pt:SetText(name)
@@ -49,17 +50,30 @@ function Plus:AddRoll(name, value, widget)
 	end)
 	pval:SetText("+"..Plus.One.db.profile.trackedPlayers[name])
 	pto:SetText(value)
+	pp:SetText("+")
+
+	pp:SetUserData("name", name)
+	pp:SetCallback("OnClick", function(widget) 
+		local name = widget:GetUserData("name")
+		Plus.One.db.profile.trackedPlayers[name] = Plus.One.db.profile.trackedPlayers[name] + 1
+		Plus.playerscore[name]:SetText(Plus.One.db.profile.trackedPlayers[name])
+		widget:SetWidth(1)
+		widget:SetHeight(1)
+	end)
 
 	-- Set up spacing
 	pt:SetWidth(80)
 	pt:SetHeight(Plus.buttonHeight)
 	pval:SetWidth(36)
 	pto:SetWidth(40)
+	pp:SetWidth(40)
+	pp:SetHeight(Plus.buttonHeight)
 
 	-- merge buttons in to parent
 	roll:AddChild(pt)
 	roll:AddChild(pval)
 	roll:AddChild(pto)
+	roll:AddChild(pp)
 
 	-- figure out where to insert the roll
 	local wid = nil
@@ -68,7 +82,9 @@ function Plus:AddRoll(name, value, widget)
 		local plus, rval = v:match("(.*)_(.*)")
 		plus = tonumber(plus)
 		rval = tonumber(rval)
-		if (Plus.One.db.profile.trackedPlayers[name] < plus or (Plus.One.db.profile.trackedPlayers[name] == plus and value > rval)) and (rs > plus or (rs == plus and vs < rval)) then
+		-- if sorting then use plus
+		if (sort and (Plus.One.db.profile.trackedPlayers[name] < plus or (Plus.One.db.profile.trackedPlayers[name] == plus and value > rval)) and (rs > plus or (rs == plus and vs < rval))) or 
+		   (not sort and value > rval and vs < rval) then
 			rs = plus
 			vs = rval
 			wid = w
@@ -94,6 +110,7 @@ function Plus:InitRoll(widget)
 		print("Already rolling an item, please wait.")
 		return
 	end
+	Plus.GUIRoot:SetStatusText("Current item: "..widget:GetUserData("link"))
 	Plus.rolling = true
 	-- reset list of people that have rolled
 	Plus.rolled = {}
@@ -131,5 +148,15 @@ function Plus:InitRoll(widget)
 		end
 	end
 	Plus.One:ScheduleTimer("EndRollTimer", Plus.One.db.profile.rollDuration)
-	SendChatMessage("Roll ("..widget:GetUserData("count").."x): "..widget:GetUserData("link").." ("..Plus.One.db.profile.rollDuration.." seconds)", Plus.isRaid and "RAID_WARNING" or "PARTY") 
+
+	SendChatMessage("Roll ("..widget:GetUserData("count").."x): "..widget:GetUserData("link").." ("..Plus.One.db.profile.rollDuration.." seconds)", "RAID_WARNING") 
+	local rollmsg = ""
+	if Plus.One.db.profile.trackSR then
+		rollmsg = rollmsg.."Soft Res 1-"..Plus.One.db.profile.rollSR..", "
+	end
+	rollmsg = rollmsg.."MainSpec 1-"..Plus.One.db.profile.rollMS
+	if Plus.One.db.profile.trackOS then
+		rollmsg = rollmsg..", Offspec 1-"..Plus.One.db.profile.rollOS
+	end
+	SendChatMessage(rollmsg, "RAID_WARNING") 
 end

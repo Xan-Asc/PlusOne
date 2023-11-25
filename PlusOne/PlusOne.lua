@@ -4,6 +4,10 @@ Plus.One = LibStub("AceAddon-3.0"):NewAddon("PlusOne", "AceConsole-3.0", "AceEve
 Plus.buttonHeight = 18
 Plus.visible = false
 
+Plus.SRSortPO = false
+Plus.MSSortPO = true
+Plus.OSSortPO = false
+
 -- One.db.profile.rollSR
 
 local PlusOneLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PlusOne", {
@@ -60,9 +64,9 @@ function Plus.One:MainWindow()
 		Plus.GUIRoot = Plus.AceGUI:Create("Frame")
 		Plus.GUIRoot:SetCallback("OnClose",function(widget) Plus.AceGUI:Release(widget) Plus.visible = false end)
 		Plus.GUIRoot:SetTitle("PlusOne")
-		Plus.GUIRoot:SetWidth(640)
-		Plus.GUIRoot:SetHeight(480)
-		Plus.GUIRoot:SetStatusText("Status Bar")
+		Plus.GUIRoot:SetWidth(750)
+		Plus.GUIRoot:SetHeight(500)
+		Plus.GUIRoot:SetStatusText("Status Bar -- test")
 		Plus.GUIRoot:SetLayout("Flow")
 
 		-- Create outer containers and add them to panel
@@ -107,7 +111,6 @@ function Plus.One:MainWindow()
 end
 
 function Plus.One:OnEnable()
-	Plus.isRaid = GetRealNumRaidMembers() > 0
 	-- Do more initialization here, that really enables the use of your addon.
 	-- Register Events, Hook functions, Create Frames, Get information from 
 	-- the game that wasn't available in OnInitialize

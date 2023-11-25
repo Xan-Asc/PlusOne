@@ -1,5 +1,9 @@
 local _, Plus = ...
 
+local next = next -- faster empty table check
+Plus.corpseitemList = {}
+Plus.itemList = {}
+
 local function RGBtoHEX (r,g,b)
 	return string.format("%02x%02x%02x", r * 255, g * 255, b * 255);
 end
@@ -41,7 +45,7 @@ function Plus:AddItem(itemlink, count)
 	pr:SetText("Roll")
 
 	-- Set up spacing
-	pi:SetWidth(75)
+	pi:SetWidth(80)
 	pc:SetWidth(20)
 	pr:SetWidth(60)
 	pr:SetHeight(Plus.buttonHeight)
@@ -76,38 +80,53 @@ function Plus:InitLoot()
 		Plus.TT = CreateFrame("GameTooltip","Tooltip",nil,"GameTooltipTemplate")
 		Plus.TT:SetOwner(UIParent, "ANCHOR_NONE")
 	end
-	local itemList = {}
 
 	-- Check for an open loot window
+	Plus.corpseitemList = {}
 	for i = 1, GetNumLootItems() do
 		if (LootSlotIsItem(i)) then
 			local _, _, itemCount, quality = GetLootSlotInfo(i)
 			if quality >= Plus.One.db.profile.minquality then
 				local itemLink = GetLootSlotLink(i);
-				if itemList[itemLink] then
-					itemList[itemLink] = itemList[itemLink] + itemCount
+				if Plus.corpseitemList[itemLink] then
+					corpseitePlus.corpseitemListmList[itemLink] = Plus.corpseitemList[itemLink] + itemCount
 				else
-					itemList[itemLink] = itemCount
+					Plus.corpseitemList[itemLink] = itemCount
 				end
 			end
 		end
 	end
+	-- Add Spacer if loot window
+	for k, v in pairs(Plus.corpseitemList) do
+		Plus:AddItem(k, v)
+	end
+	if next(Plus.corpseitemList) ~= nil then
+		local spacer = Plus.AceGUI:Create("Heading")
+		spacer:SetText("^Loot Window^")
+		spacer:SetRelativeWidth(1)
+		Plus.itemcontainer:AddChild(spacer)
+	end
+
 	-- check bags for any unbound items
+	Plus.itemList = {}
 	for bagID=0, 4 do
 		for slot=1, GetContainerNumSlots(bagID) do
-			local _, itemCount, _, quality, _, _, itemLink = GetContainerItemInfo(bagID, slot)
-			if itemLink and (quality >= Plus.One.db.profile.minquality or quality == -1) then
-				if isTradable(bagID, slot) then
-					if itemList[itemLink] then
-						itemList[itemLink] = itemList[itemLink] + itemCount
-					else
-						itemList[itemLink] = itemCount
+			local _, itemCount, _, _, _, _, itemLink = GetContainerItemInfo(bagID, slot)			
+			if itemLink then
+				local _, _, iqual = GetItemInfo(itemLink)
+				if iqual >= Plus.One.db.profile.minquality then
+					if isTradable(bagID, slot) then
+						if Plus.itemList[itemLink] then
+							Plus.itemList[itemLink] = Plus.itemList[itemLink] + itemCount
+						else
+							Plus.itemList[itemLink] = itemCount
+						end
 					end
 				end
 			end
 		end
 	end
-	for k, v in pairs(itemList) do
+	for k, v in pairs(Plus.itemList) do
 		Plus:AddItem(k, v)
 	end
 end

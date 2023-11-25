@@ -1,5 +1,8 @@
 local _, Plus = ...
 
+-- ["name"] = pto
+Plus.playerscore = {}
+
 function Plus:AddPlayer(name)
 	-- Add Player
 	local player = Plus.AceGUI:Create("SimpleGroup")
@@ -11,20 +14,22 @@ function Plus:AddPlayer(name)
 	local pm = Plus.AceGUI:Create("Button")
 
 	-- Set up button functionality
-	pp:SetUserData("pto", pto)
+	Plus.playerscore[name] = pto
+
 	pp:SetUserData("name", name)
 	pp:SetCallback("OnClick", function(widget) 
-		Plus.One.db.profile.trackedPlayers[widget:GetUserData("name")] = Plus.One.db.profile.trackedPlayers[widget:GetUserData("name")] + 1
-		(widget:GetUserData("pto")):SetText(Plus.One.db.profile.trackedPlayers[name])
+		local name = widget:GetUserData("name")
+		Plus.One.db.profile.trackedPlayers[name] = Plus.One.db.profile.trackedPlayers[name] + 1
+		Plus.playerscore[name]:SetText(Plus.One.db.profile.trackedPlayers[name])
 	end)
-
-	pm:SetUserData("pto", pto)
+	
 	pm:SetUserData("name", name)
 	pm:SetCallback("OnClick", function(widget) 
-		if Plus.One.db.profile.trackedPlayers[widget:GetUserData("name")] > 0 then
-			Plus.One.db.profile.trackedPlayers[widget:GetUserData("name")] = Plus.One.db.profile.trackedPlayers[widget:GetUserData("name")] - 1
+		local name = widget:GetUserData("name")
+		if Plus.One.db.profile.trackedPlayers[name] > 0 then
+			Plus.One.db.profile.trackedPlayers[name] = Plus.One.db.profile.trackedPlayers[name] - 1
 		end
-		(widget:GetUserData("pto")):SetText(Plus.One.db.profile.trackedPlayers[name])
+		Plus.playerscore[name]:SetText(Plus.One.db.profile.trackedPlayers[name])
 	end)
 
 	-- Spacer
@@ -54,25 +59,15 @@ function Plus:AddPlayer(name)
 	player:AddChild(pm)
 
 	Plus.playercontainer:AddChild(player)
-	-- end throwaway portion
 end
 
 function Plus:InitParty()
 	local playernames = {}
-	if Plus.isRaid then
-		for i=1,40 do 
-			local name = GetUnitName("raid"..i)
-			if name then
-				playernames[#playernames + 1] = name
-			end
-		end
-	else
-		playernames[#playernames + 1] = GetUnitName("player")
-		for i=1,4 do 
-			local name = GetUnitName("party"..i)
-			if name then
-				playernames[#playernames + 1] = name
-			end
+	Plus.playerscore = {}
+	for i=1,40 do 
+		local name = GetUnitName("raid"..i)
+		if name then
+			playernames[#playernames + 1] = name
 		end
 	end
 	table.sort(playernames)
