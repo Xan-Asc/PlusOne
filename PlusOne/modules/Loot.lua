@@ -54,20 +54,23 @@ function Plus:AddItem(itemlink, count)
 	Plus.itemcontainer:AddChild(item)
 end
 
+local needle = BIND_TRADE_TIME_REMAINING:gsub("%%s", ".*")
+
 local function isTradable(bagID, slot)
 	Plus.TT:ClearLines()  
 	Plus.TT:SetBagItem(bagID, slot)
+	local retval = true
 	for i = 1,Plus.TT:NumLines() do
 		local line = _G[Plus.TT:GetName() .. "TextLeft" .. i]:GetText()
 		if line then
-			if string.find(line, string.format(BIND_TRADE_TIME_REMAINING, ".*")) then
+			if string.find(line, string.format(BIND_TRADE_TIME_REMAINING_REPLACEMENT, ".*")) then
 				return true
 			elseif line==ITEM_SOULBOUND or line==ITEM_ACCOUNTBOUND then
-				return false
+				retval = false
 			end
 		end
 	end
-	return true
+	return retval
 end
 
 function Plus:InitLoot()
