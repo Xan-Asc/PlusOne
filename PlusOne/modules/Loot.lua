@@ -71,6 +71,10 @@ function Plus:AddItem(itemlink, count)
 end
 
 local function isTradable(bagID, slot)
+	-- check if item is blacklisted before processing it
+	local itemId = GetContainerItemID(bagID, slot)
+	if PO_blacklist[itemId] then return false end
+
 	Plus.TT:ClearLines()  
 	Plus.TT:SetBagItem(bagID, slot)
 	local retval = true

@@ -1,13 +1,13 @@
 local _, Plus = ...
 
 function Plus.One:LootRollTimer(remain)
-	SendChatMessage(remain.." seconds remaining!", "RAID_WARNING")
+	SendChatMessage(remain.." seconds remaining!", Plus.One.db.profile.output)
 end
 
 function Plus.One:EndRollTimer(remain)
 	Plus.One:UnregisterEvent("CHAT_MSG_SYSTEM")
 	Plus.rolling = false
-	SendChatMessage("Rolls have finished, no further rolls will be tracked.", "RAID_WARNING")
+	SendChatMessage("Rolls have finished, no further rolls will be tracked.", Plus.One.db.profile.output)
 end
 
 function Plus.One:CHAT_MSG_SYSTEM(...)
@@ -64,7 +64,7 @@ function Plus:AddRoll(name, value, widget, sort)
 	-- Set up spacing
 	pt:SetWidth(80)
 	pt:SetHeight(Plus.buttonHeight)
-	pval:SetWidth(20)
+	pval:SetWidth(25)
 	pto:SetWidth(40)
 	pp:SetWidth(40)
 	pp:SetHeight(Plus.buttonHeight)
@@ -152,7 +152,7 @@ function Plus:InitRoll(widget)
 	end
 	Plus.One:ScheduleTimer("EndRollTimer", Plus.One.db.profile.rollDuration)
 
-	SendChatMessage("Roll ("..widget:GetUserData("count").."x): "..widget:GetUserData("link").." ("..Plus.One.db.profile.rollDuration.." seconds)", "RAID_WARNING") 
+	SendChatMessage("Roll ("..widget:GetUserData("count").."x): "..widget:GetUserData("link").." ("..Plus.One.db.profile.rollDuration.." seconds)", Plus.One.db.profile.output) 
 	local rollmsg = ""
 	if Plus.One.db.profile.trackSR then
 		rollmsg = rollmsg.."Soft Res 1-"..Plus.One.db.profile.rollSR..", "
@@ -161,5 +161,5 @@ function Plus:InitRoll(widget)
 	if Plus.One.db.profile.trackOS then
 		rollmsg = rollmsg..", Offspec 1-"..Plus.One.db.profile.rollOS
 	end
-	SendChatMessage(rollmsg, "RAID_WARNING") 
+	SendChatMessage(rollmsg, Plus.One.db.profile.output) 
 end

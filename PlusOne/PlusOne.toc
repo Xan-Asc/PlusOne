@@ -2,8 +2,8 @@
 ## Title: Plus One Raid Assist Tool
 ## Author: Xan
 ## Notes: Provides tools for managing a +1 raid
-## Version: 0.1a
-## SavedVariables: SettingsDB
+## Version: 0.8
+## SavedVariables: PO_SettingsDB, PO_blacklist
 
 
 # Libraries
@@ -17,3 +17,4 @@ modules\Roll.lua
 modules\Party.lua
 modules\Loot.lua
 modules\Options.lua
+modules\Utility.lua

@@ -68,8 +68,6 @@ function Plus:InitParty()
 		local name = GetUnitName("raid"..i)
 		if name then
 			playernames[#playernames + 1] = name
-		else
-			playernames[#playernames + 1] = "Player"..i
 		end
 	end
 	table.sort(playernames)
