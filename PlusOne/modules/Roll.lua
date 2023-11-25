@@ -128,7 +128,7 @@ function Plus:InitRoll(widget)
 	end
 
 	local mswrap = Plus.AceGUI:Create("InlineGroup")
-	mswrap:SetTitle("Mainspec - "..Plus.One.db.profile.rollMS)
+	mswrap:SetTitle("Priority - "..Plus.One.db.profile.rollMS)
 	mswrap:SetUserData("rollvals", {})
 	mswrap:SetWidth(200)
 	Plus.rollcontainer:AddChild(mswrap)
@@ -136,7 +136,7 @@ function Plus:InitRoll(widget)
 
 	if Plus.One.db.profile.trackOS then
 		local oswrap = Plus.AceGUI:Create("InlineGroup")
-		oswrap:SetTitle("Offspec - "..Plus.One.db.profile.rollOS)
+		oswrap:SetTitle("Greed - "..Plus.One.db.profile.rollOS)
 		oswrap:SetUserData("rollvals", {})
 		oswrap:SetWidth(200)
 		Plus.rollcontainer:AddChild(oswrap)
@@ -157,9 +157,9 @@ function Plus:InitRoll(widget)
 	if Plus.One.db.profile.trackSR then
 		rollmsg = rollmsg.."Soft Res 1-"..Plus.One.db.profile.rollSR..", "
 	end
-	rollmsg = rollmsg.."MainSpec 1-"..Plus.One.db.profile.rollMS
+	rollmsg = rollmsg.."Priority 1-"..Plus.One.db.profile.rollMS
 	if Plus.One.db.profile.trackOS then
-		rollmsg = rollmsg..", Offspec 1-"..Plus.One.db.profile.rollOS
+		rollmsg = rollmsg..", Greed 1-"..Plus.One.db.profile.rollOS
 	end
 	SendChatMessage(rollmsg, Plus.One.db.profile.output) 
 end

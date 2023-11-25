@@ -90,14 +90,14 @@ Plus.PlusOneOptions = {
 ]]					}
 				},
 				MS = {
-					name = "Mainspec Options",
+					name = "Priority Options",
 					order = 3,
 					type = "group",
 					inline = true,
 					args = {
 						rollSR = { 
 							name = "Max Roll value",
-							desc = "Roll value for Mainspec, /roll 1 <val>",
+							desc = "Roll value for Priority, /roll 1 <val>",
 							type = "input",
 							set = function(info,val) Plus.One.db.profile.rollMS = tonumber(val) end,
 							get = function(info) return tostring(Plus.One.db.profile.rollMS) end,
@@ -107,7 +107,7 @@ Plus.PlusOneOptions = {
 					}
 				},
 				OS = {
-					name = "Offspec Options",
+					name = "Greed Options",
 					order = 5,
 					type = "group",
 					inline = true,
@@ -115,7 +115,7 @@ Plus.PlusOneOptions = {
 						trackSR = { 
 							name = "Track",
 							order = 2,
-							desc = "Should Offspec Rolls be tracked",
+							desc = "Should Greed Rolls be tracked",
 							type = "toggle",
 							set = function(info,val) Plus.One.db.profile.trackOS = val end,
 							get = function(info) return Plus.One.db.profile.trackOS end,
@@ -123,7 +123,7 @@ Plus.PlusOneOptions = {
 						rollSR = { 
 							name = "Max Roll value",
 							order = 1,
-							desc = "Roll value for Offspec, /roll 1 <val>",
+							desc = "Roll value for Greed, /roll 1 <val>",
 							type = "input",
 							set = function(info,val) Plus.One.db.profile.rollOS = tonumber(val) end,
 							get = function(info) return tostring(Plus.One.db.profile.rollOS) end,
