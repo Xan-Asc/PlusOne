@@ -11,7 +11,7 @@ end
 function Plus:AddItem(itemlink, count)
 	local item = Plus.AceGUI:Create("SimpleGroup")
 	item:SetLayout("Flow")
-	item:SetWidth(210)
+	item:SetWidth(248)
 	local pi = Plus.AceGUI:Create("InteractiveLabel")
 	pi:SetUserData("link", itemlink)
 	pi:SetCallback("OnEnter", function(widget)
@@ -54,7 +54,7 @@ function Plus:AddItem(itemlink, count)
 	hide:SetText("X")
 
 	-- Set up spacing
-	pi:SetWidth(80)
+	pi:SetWidth(118)
 	pc:SetWidth(20)
 	pr:SetWidth(55)
 	pr:SetHeight(Plus.buttonHeight)
@@ -85,6 +85,10 @@ local function isTradable(bagID, slot)
 		end
 	end
 	return retval
+end
+
+local function lootSort(a, b)
+	return a[2] < b[2]
 end
 
 function Plus:InitLoot()
@@ -129,19 +133,20 @@ function Plus:InitLoot()
 				local name, _, iqual = GetItemInfo(itemLink)
 				if iqual >= Plus.One.db.profile.minquality then
 					if isTradable(bagID, slot) then
-						if Plus.itemList[name] then
-							Plus.itemList[name]["count"] = Plus.itemList[name]["count"] + itemCount
+
+						if Plus.itemList[itemLink] then
+							Plus.itemList[itemLink] = Plus.itemList[itemLink] + itemCount
 						else
-							sortedItems[#sortedItems + 1] = name
-							Plus.itemList[name] = {["itemlink"] = itemLink ,["count"] = itemCount}
+							sortedItems[#sortedItems + 1] = {itemLink, name}
+							Plus.itemList[itemLink] = itemCount
 						end
 					end
 				end
 			end
 		end
 	end
-	table.sort(sortedItems)
+	table.sort(sortedItems, lootSort)
 	for _, n in ipairs(sortedItems) do
-		Plus:AddItem(Plus.itemList[n]["itemlink"], Plus.itemList[n]["count"])
+		Plus:AddItem(n[1], Plus.itemList[n[1]])
 	end
 end
