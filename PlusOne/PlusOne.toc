@@ -1,0 +1,19 @@
+## Interface: 30300
+## Title: Plus One Raid Assist Tool
+## Author: Xan
+## Notes: Provides tools for managing a +1 raid
+## Version: 0.1a
+## SavedVariables: SettingsDB
+
+
+# Libraries
+libraries.xml
+
+# Core
+PlusOne.lua
+
+# modules
+modules\Roll.lua
+modules\Party.lua
+modules\Loot.lua
+modules\Options.lua

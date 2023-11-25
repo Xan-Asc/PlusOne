@@ -1,0 +1,19 @@
+------------------------------------------------------------------------
+r25 | ammo | 2009-08-30 11:14:46 +0000 (Sun, 30 Aug 2009) | 1 line
+Changed paths:
+   A /tags/r25-release (from /trunk:24)
+
+Tagging as r25-release
+------------------------------------------------------------------------
+r24 | ammo | 2009-08-30 11:13:31 +0000 (Sun, 30 Aug 2009) | 1 line
+Changed paths:
+   M /trunk/LibCandyBar-3.0.toc
+
+toc to the hand
+------------------------------------------------------------------------
+r23 | ammo | 2009-06-07 07:54:21 +0000 (Sun, 07 Jun 2009) | 1 line
+Changed paths:
+   M /trunk/bars.lua
+
+round the time from 10 sec to 1 minute rather than flooring it
+------------------------------------------------------------------------
