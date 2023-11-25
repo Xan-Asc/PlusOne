@@ -11,7 +11,7 @@ end
 function Plus:AddItem(itemlink, count)
 	local item = Plus.AceGUI:Create("SimpleGroup")
 	item:SetLayout("Flow")
-	item:SetRelativeWidth(1)
+	item:SetWidth(200)
 	local pi = Plus.AceGUI:Create("InteractiveLabel")
 	pi:SetUserData("link", itemlink)
 	pi:SetCallback("OnEnter", function(widget)
@@ -29,6 +29,14 @@ function Plus:AddItem(itemlink, count)
 	pr:SetCallback("OnClick", function(widget) 
 		Plus:InitRoll(widget)
 	end)
+	local hide = Plus.AceGUI:Create("Button")
+	hide:SetUserData("parent", item)
+	hide:SetCallback("OnClick", function(widget) 
+		item:SetWidth(1)
+		item:SetHeight(1)
+		item:Release()
+		Plus.itemcontainer:DoLayout()
+	end)
 
 	-- Spacer
 	local spacer = Plus.AceGUI:Create("Label")
@@ -43,17 +51,21 @@ function Plus:AddItem(itemlink, count)
 	pi:SetText(color..itemName.."|r")
 	pc:SetText(count)
 	pr:SetText("Roll")
+	hide:SetText("X")
 
 	-- Set up spacing
 	pi:SetWidth(80)
 	pc:SetWidth(20)
-	pr:SetWidth(60)
+	pr:SetWidth(55)
 	pr:SetHeight(Plus.buttonHeight)
+	hide:SetWidth(40)
+	hide:SetHeight(Plus.buttonHeight)
 
 	-- merge buttons in to parent
 	item:AddChild(pi)
 	item:AddChild(pc)
 	item:AddChild(pr)
+	item:AddChild(hide)
 
 	Plus.itemcontainer:AddChild(item)
 end
@@ -103,7 +115,7 @@ function Plus:InitLoot()
 	if next(Plus.corpseitemList) ~= nil then
 		local spacer = Plus.AceGUI:Create("Heading")
 		spacer:SetText("^Loot Window^")
-		spacer:SetRelativeWidth(1)
+		spacer:SetWidth(165)
 		Plus.itemcontainer:AddChild(spacer)
 	end
 

@@ -7,7 +7,7 @@ function Plus:AddPlayer(name)
 	-- Add Player
 	local player = Plus.AceGUI:Create("SimpleGroup")
 	player:SetLayout("Flow")
-	player:SetRelativeWidth(1)
+	player:SetWidth(183)
 	local pt = Plus.AceGUI:Create("Label")
 	local pto = Plus.AceGUI:Create("Label")
 	local pp = Plus.AceGUI:Create("Button")

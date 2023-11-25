@@ -36,7 +36,7 @@ local timer_rolls = {1, 2, 3, 5, 10, 15, 20, 30}
 function Plus:AddRoll(name, value, widget, sort)
 	local roll = Plus.AceGUI:Create("SimpleGroup")
 	roll:SetLayout("Flow")
-	roll:SetRelativeWidth(1)
+	roll:SetWidth(201)
 	local pt = Plus.AceGUI:Create("Button")
 	local pval = Plus.AceGUI:Create("Label")
 	local pto = Plus.AceGUI:Create("Label")
