@@ -41,7 +41,7 @@ function Plus:AddItem(itemlink, count)
 	pr:SetText("Roll")
 
 	-- Set up spacing
-	pi:SetWidth(80)
+	pi:SetWidth(75)
 	pc:SetWidth(20)
 	pr:SetWidth(60)
 	pr:SetHeight(Plus.buttonHeight)
@@ -53,8 +53,6 @@ function Plus:AddItem(itemlink, count)
 
 	Plus.itemcontainer:AddChild(item)
 end
-
-local needle = BIND_TRADE_TIME_REMAINING:gsub("%%s", ".*")
 
 local function isTradable(bagID, slot)
 	Plus.TT:ClearLines()  
@@ -80,6 +78,7 @@ function Plus:InitLoot()
 	end
 	local itemList = {}
 
+	-- Check for an open loot window
 	for i = 1, GetNumLootItems() do
 		if (LootSlotIsItem(i)) then
 			local _, _, itemCount, quality = GetLootSlotInfo(i)
@@ -93,11 +92,11 @@ function Plus:InitLoot()
 			end
 		end
 	end
-	if itemLinkText then DEFAULT_CHAT_FRAME:AddMessage(itemLinkText) end
+	-- check bags for any unbound items
 	for bagID=0, 4 do
 		for slot=1, GetContainerNumSlots(bagID) do
 			local _, itemCount, _, quality, _, _, itemLink = GetContainerItemInfo(bagID, slot)
-			if itemLink and quality >= Plus.One.db.profile.minquality then
+			if itemLink and (quality >= Plus.One.db.profile.minquality or quality == -1) then
 				if isTradable(bagID, slot) then
 					if itemList[itemLink] then
 						itemList[itemLink] = itemList[itemLink] + itemCount
