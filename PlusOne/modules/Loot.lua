@@ -58,7 +58,7 @@ function Plus:AddItem(itemlink, count)
 	pc:SetWidth(20)
 	pr:SetWidth(55)
 	pr:SetHeight(Plus.buttonHeight)
-	hide:SetWidth(40)
+	hide:SetWidth(45)
 	hide:SetHeight(Plus.buttonHeight)
 
 	-- merge buttons in to parent
